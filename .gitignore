@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Environment variables / secrets
+.env
+*.env
+*.key
+*credentials*
+
+# Large data files
+*.csv
+!**/sample/**/*.csv
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+*.h5
+checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Lecturer-provided temp folder (kept locally, not versioned)
+Resources/
