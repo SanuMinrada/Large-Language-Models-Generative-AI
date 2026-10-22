@@ -31,5 +31,5 @@ architecture families (BERT, GPT, T5) and modern LLMs differ.
 ## My work
 
 - [Notes](notes.md)
-- [Lab work](lab/)
+- [Lab work — tiny Transformer trained from scratch](lab/lab3_tiny_transformer.ipynb)
 - [Reflection](reflection.md)

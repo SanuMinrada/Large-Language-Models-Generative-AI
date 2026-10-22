@@ -26,5 +26,5 @@ traditional methods.
 ## My work
 
 - [Notes](notes.md)
-- [Lab work](lab/)
+- [Lab work — sentiment analysis notebook](lab/lab1_sentiment_analysis.ipynb)
 - [Reflection](reflection.md)
