@@ -1,4 +1,4 @@
-# LLM & GenAI Portfolio — Bhagya Induwara
+# LLM & GenAI Portfolio 
 
 *Module code / university: TBD*
 
