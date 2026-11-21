@@ -2,7 +2,7 @@
 
 ## What I learned
 
-Working through the [notes](notes.md) and then actually building the [Lab 1 sentiment classifier](lab/lab1_sentiment_analysis.ipynb) made the preprocessing pipeline concrete in a way the slides alone didn't: lowercasing, punctuation stripping, and the clean/raw text comparison all made obvious sense once I saw them applied to real Amazon/IMDb/Yelp reviews. The Bag-of-Words representation stopped being an abstract diagram and became a 4,516-column sparse matrix I could actually inspect. I was a little surprised that a simple BoW + Logistic Regression pipeline reached 82.2% accuracy on real review text with almost no tuning — it's a good demonstration of why BoW was the default approach for so long before embeddings took over.
+Working through the [notes](notes.md) and then actually building the [Lab 1 sentiment classifier](notebook/lab1_sentiment_analysis.ipynb) made the preprocessing pipeline concrete in a way the slides alone didn't: lowercasing, punctuation stripping, and the clean/raw text comparison all made obvious sense once I saw them applied to real Amazon/IMDb/Yelp reviews. The Bag-of-Words representation stopped being an abstract diagram and became a 4,516-column sparse matrix I could actually inspect. I was a little surprised that a simple BoW + Logistic Regression pipeline reached 82.2% accuracy on real review text with almost no tuning — it's a good demonstration of why BoW was the default approach for so long before embeddings took over.
 
 ## What was challenging
 

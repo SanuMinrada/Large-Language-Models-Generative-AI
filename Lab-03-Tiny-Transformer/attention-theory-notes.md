@@ -72,7 +72,7 @@ Source: [Week 2 lecture slides](resources/Week%202.pdf) — Neural Networks: Fou
 
 ### Applied activity: "AI in Everyday Challenges"
 
-A group exercise using an LLM as a product-development partner to design a product addressing a real student problem (e.g. forgetfulness, distraction, food waste, dehydration, time management, plastic waste, carrying too much, budgeting). Deliverables per group: product concept, name, key features, target user, and a visual prototype/mock-up — see [Lab sheet 2](resources/Lab%20sheet%202.pdf).
+A group exercise using an LLM as a product-development partner to design a product addressing a real student problem (e.g. forgetfulness, distraction, food waste, dehydration, time management, plastic waste, carrying too much, budgeting). Deliverables per group: product concept, name, key features, target user, and a visual prototype/mock-up — see [Lab sheet 2](../Lab-02-LLM-Everyday-Life/resources/Lab%20sheet%202.pdf) (documented separately in [Lab-02-LLM-Everyday-Life](../Lab-02-LLM-Everyday-Life/)).
 
 ## Code / examples
 

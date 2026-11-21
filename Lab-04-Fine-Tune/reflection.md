@@ -4,7 +4,7 @@
 
 The [notes](notes.md)' point that "fine-tuning is worth it when prompt engineering consistently
 fails or the task needs domain-specific knowledge" went from abstract to very concrete once I
-actually ran [Lab 4](lab/lab4_fine_tuning.ipynb): the untouched base model hedges on *every*
+actually ran [Lab 4](notebooks/lab4_fine_tuning.ipynb): the untouched base model hedges on *every*
 ByteFix question ("As an AI, I don't have real-time access to current prices...") because it
 genuinely has no way to know a fictional shop's prices — no amount of clever prompting would fix
 that, only giving it the information would, which is exactly the "domain-specific knowledge"

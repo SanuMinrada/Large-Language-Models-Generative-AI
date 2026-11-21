@@ -1,29 +1,28 @@
-# LLM & GenAI Portfolio 
+# LLM & GenAI Portfolio
 
 *Module code / university: TBD*
+
+Individual practical portfolio for the Large Language Models and Generative AI module, documenting
+each laboratory activity (implementation, code/notebooks, results, and observations) as a separate
+section, per the module's Practical Assignment Brief.
 
 ## About
 
 *(Placeholder — write a short intro about yourself, this module, and what this portfolio covers.)*
 
-## Progress
+## Labs
 
-| Week | Topic | Notes | Lab | Reflection | Status |
-|------|-------|-------|-----|------------|--------|
-| 1 | [NLP Foundations](weeks/week-01-nlp-foundations/README.md) | [Notes](weeks/week-01-nlp-foundations/notes.md) | [Lab](weeks/week-01-nlp-foundations/lab/) | [Reflection](weeks/week-01-nlp-foundations/reflection.md) | ⬜ |
-| 2 | [Transformers and Attention](weeks/week-02-transformers-and-attention/README.md) | [Notes](weeks/week-02-transformers-and-attention/notes.md) | [Lab](weeks/week-02-transformers-and-attention/lab/) | [Reflection](weeks/week-02-transformers-and-attention/reflection.md) | ⬜ |
-| 3 | [LLM Internals and Pre-training](weeks/week-03-llm-internals-and-pretraining/README.md) | [Notes](weeks/week-03-llm-internals-and-pretraining/notes.md) | [Lab](weeks/week-03-llm-internals-and-pretraining/lab/) | [Reflection](weeks/week-03-llm-internals-and-pretraining/reflection.md) | ⬜ |
-| 4 | [Prompt Engineering and Fine-Tuning](weeks/week-04-prompt-engineering-and-fine-tuning/README.md) | [Notes](weeks/week-04-prompt-engineering-and-fine-tuning/notes.md) | [Lab](weeks/week-04-prompt-engineering-and-fine-tuning/lab/) | [Reflection](weeks/week-04-prompt-engineering-and-fine-tuning/reflection.md) | ⬜ |
+| Lab | Title | Status |
+|-----|-------|--------|
+| [Lab 01](Lab-01-Machine-Learning/README.md) | Machine Learning — Sentiment Analysis | ✅ |
+| [Lab 02](Lab-02-LLM-Everyday-Life/README.md) | LLM in Everyday Life (group activity) | ⬜ Pending — group activity details to be added |
+| [Lab 03](Lab-03-Tiny-Transformer/README.md) | Tiny Transformer | ✅ |
+| [Lab 04](Lab-04-Fine-Tune/README.md) | Fine-Tuning an LLM (LoRA) | ✅ |
+| [Lab 05](Lab-05-RAG-Pipeline/README.md) | RAG Pipeline | ⬜ Pending — lab materials not yet provided |
+| [Lab 06](Lab-06-AI-Agents/README.md) | AI Agents | ⬜ Pending — lab materials not yet provided |
 
-## Coursework
-
-*(No coursework pieces added yet.)*
-
-## Daily Log
-
-<!-- LOG-START -->
-- [2026-10-16](logs/2026-10-16.md) — Set up portfolio repo structure
-<!-- LOG-END -->
+[Final-Reflection.md](Final-Reflection.md) — overall reflection across the module, to be completed
+once all labs are finished.
 
 ## Skills & Tools
 
@@ -38,7 +37,3 @@
 - Pandas / NumPy
 - Matplotlib / Seaborn
 - Google Colab
-
-## Reading List
-
-See [reading-list/reading-list.md](reading-list/reading-list.md).

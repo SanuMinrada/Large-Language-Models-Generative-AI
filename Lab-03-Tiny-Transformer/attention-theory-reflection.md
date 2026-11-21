@@ -2,7 +2,7 @@
 
 ## What I learned
 
-The neuron → MLP → backpropagation refresher in the [notes](notes.md) turned out to matter more than I expected going in — I'd seen the Transformer feed-forward block described before, but seeing explicitly that it's "exactly `MLP(GELU)` applied position-wise" tied it directly back to the plain neural-network fundamentals instead of treating the Transformer as some separate, unrelated architecture. The Query/Key/Value framing (Query = what I'm looking for, Key = what I represent, Value = what I carry) finally gave me a mental model for attention instead of just a formula — `softmax(QKᵀ/√dₖ)·V` makes a lot more sense once each term has a concrete "role."
+The neuron → MLP → backpropagation refresher in the [notes](attention-theory-notes.md) turned out to matter more than I expected going in — I'd seen the Transformer feed-forward block described before, but seeing explicitly that it's "exactly `MLP(GELU)` applied position-wise" tied it directly back to the plain neural-network fundamentals instead of treating the Transformer as some separate, unrelated architecture. The Query/Key/Value framing (Query = what I'm looking for, Key = what I represent, Value = what I carry) finally gave me a mental model for attention instead of just a formula — `softmax(QKᵀ/√dₖ)·V` makes a lot more sense once each term has a concrete "role."
 
 ## What was challenging
 
