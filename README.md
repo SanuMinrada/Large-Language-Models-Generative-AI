@@ -18,7 +18,7 @@ section, per the module's Practical Assignment Brief.
 | [Lab 02](Lab-02-LLM-Everyday-Life/README.md) | LLM in Everyday Life (group activity) | ⬜ Pending — group activity details to be added |
 | [Lab 03](Lab-03-Tiny-Transformer/README.md) | Tiny Transformer | ✅ |
 | [Lab 04](Lab-04-Fine-Tune/README.md) | Fine-Tuning an LLM (LoRA) | ✅ |
-| [Lab 05](Lab-05-RAG-Pipeline/README.md) | RAG Pipeline | ⬜ Pending — lab materials not yet provided |
+| [Lab 05](Lab-05-RAG-Pipeline/README.md) | RAG Pipeline | ✅ |
 | [Lab 06](Lab-06-AI-Agents/README.md) | AI Agents | ⬜ Pending — lab materials not yet provided |
 
 [Final-Reflection.md](Final-Reflection.md) — overall reflection across the module, to be completed
@@ -32,6 +32,10 @@ once all labs are finished.
 - PEFT (LoRA / QLoRA)
 - TRL (SFTTrainer)
 - Gradio
+- LangChain
+- Ollama
+- ChromaDB
+- Streamlit
 - scikit-learn
 - NLTK
 - Pandas / NumPy

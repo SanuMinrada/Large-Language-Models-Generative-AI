@@ -16,6 +16,11 @@ venv/
 env/
 .env/
 ENV/
+rag_env/
+
+# Vector stores / RAG indexes (regenerable via ingest.py)
+chroma_db/
+*.sqlite3
 
 # Environment variables / secrets
 .env
@@ -38,5 +43,8 @@ checkpoints/
 Thumbs.db
 desktop.ini
 
-# Lecturer-provided temp folder (kept locally, not versioned)
-Resources/
+# Lecturer-provided materials (lecture slides, lab sheets, reference code/
+# notebooks) — kept locally for reference but never committed/redistributed.
+# Unanchored on purpose: matches the root Resources/ drop folder AND every
+# Lab-XX/resources/ folder.
+resources/
