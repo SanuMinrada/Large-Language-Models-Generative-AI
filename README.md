@@ -19,7 +19,7 @@ section, per the module's Practical Assignment Brief.
 | [Lab 03](Lab-03-Tiny-Transformer/README.md) | Tiny Transformer | ✅ |
 | [Lab 04](Lab-04-Fine-Tune/README.md) | Fine-Tuning an LLM (LoRA) | ✅ |
 | [Lab 05](Lab-05-RAG-Pipeline/README.md) | RAG Pipeline | ✅ |
-| [Lab 06](Lab-06-AI-Agents/README.md) | AI Agents | ⬜ Pending — lab materials not yet provided |
+| [Lab 06](Lab-06-AI-Agents/README.md) | AI Agents | 🟨 Parts A-C done; Part D needs your Google OAuth setup |
 
 [Final-Reflection.md](Final-Reflection.md) — overall reflection across the module, to be completed
 once all labs are finished.

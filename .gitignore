@@ -22,11 +22,15 @@ rag_env/
 chroma_db/
 *.sqlite3
 
+# Local agent memory store (regenerable; may contain personal conversation data)
+*.db
+
 # Environment variables / secrets
 .env
 *.env
 *.key
 *credentials*
+token.json
 
 # Large data files
 *.csv
