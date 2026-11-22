@@ -2,7 +2,7 @@
 
 ## What I learned
 
-Reading the "looking inside an LLM" material in the [notes](llm-internals-notes.md) was one thing, but actually building and training [a tiny Transformer from scratch in Lab 3](notebooks/lab3_tiny_transformer.ipynb) made the whole forward-pass pipeline (tokenizer → Transformer blocks → LM head → sampling) feel real instead of diagrammatic. Watching the validation loss fall from 4.46 (untrained, roughly `ln(75)` for a 75-character vocabulary — i.e. the model starting out no better than guessing uniformly) down to 1.56 over 15 epochs, and perplexity land at 4.77, gave me an actual number to attach to the abstract idea of "the model is learning structure." The generated text after training is still mostly gibberish, but it's gibberish with English-shaped words and roughly sentence-like punctuation, which is a genuinely different thing from the random-character output the untrained model would have produced. The BERT vs. GPT vs. T5 comparison table also finally made sense end-to-end once I'd implemented the causal mask myself — "causal/unidirectional" isn't just a label, it's one `torch.triu(...)` call that determines whether a position can see future tokens or not.
+Reading the "looking inside an LLM" material in the [notes](notes.md) was one thing, but actually building and training [a tiny Transformer from scratch in Lab 3](notebooks/lab3_tiny_transformer.ipynb) made the whole forward-pass pipeline (tokenizer → Transformer blocks → LM head → sampling) feel real instead of diagrammatic. Watching the validation loss fall from 4.46 (untrained, roughly `ln(75)` for a 75-character vocabulary — i.e. the model starting out no better than guessing uniformly) down to 1.56 over 15 epochs, and perplexity land at 4.77, gave me an actual number to attach to the abstract idea of "the model is learning structure." The generated text after training is still mostly gibberish, but it's gibberish with English-shaped words and roughly sentence-like punctuation, which is a genuinely different thing from the random-character output the untrained model would have produced. Actually loading the saved checkpoint into a [Gradio chat interface](notebooks/lab3_gradio_chat.ipynb) and sending it a real message made it feel like a finished thing rather than just notebook output. The BERT vs. GPT vs. T5 comparison table also finally made sense end-to-end once I'd implemented the causal mask myself — "causal/unidirectional" isn't just a label, it's one `torch.triu(...)` call that determines whether a position can see future tokens or not.
 
 ## What was challenging
 
@@ -11,6 +11,26 @@ Interpreting the perplexity number in context was harder than I expected — kno
 ## How it connects to earlier weeks
 
 This week is the most directly cumulative one so far. The Lab 3 Transformer reuses, line for line, the mechanisms from Week 2's notes: GELU in the feed-forward block, residual connections + LayerNorm (built into `nn.TransformerEncoderLayer`) preventing vanishing gradients, and multi-head self-attention — just with a causal mask added, which is the one concrete architectural difference between this week's GPT-style Causal Language Model and the more general attention mechanism Week 2 introduced. It also directly revisits Week 1's tokenization discussion: I used character-level tokenization in the lab (matching the lecturer's starter code) specifically because it's the simplest option from Week 1's "types of tokenization" slide, but the Week 1 notes already flagged that sub-word tokenization (BERT/GPT/T5) exists precisely to balance vocabulary size against sequence length — a trade-off I could feel directly in this lab, since a 75-character vocabulary means every single word takes many tokens to generate.
+
+## Mechanisms that improve performance
+
+The lab sheet asks what mechanisms are actually helping this model perform, so going through them
+directly: masked multi-head self-attention (made causal by the triangular mask in `forward()`) is
+what lets the model relate tokens to each other at all; the residual connections and LayerNorm
+built into `nn.TransformerEncoderLayer` are what keep gradients stable as the signal passes through
+multiple layers; GELU in the feed-forward block gives smoother gradients than ReLU would; and AdamW
+is doing the actual per-parameter learning-rate adaptation during training. All four are already in
+this tiny model, and the capacity experiment (1 layer/1 head vs. 2 layers/2 heads) is direct proof
+that taking some of this capacity away measurably hurts both the loss and the generated text.
+
+Beyond what's already here, a few things would clearly help if this were scaled past a lab exercise:
+switching from character-level to sub-word tokenization (so the model isn't spending its limited
+capacity reconstructing whole words one character at a time), more training data and steps (900
+stories and 1,500 steps is barely enough to see the loss bend), a longer `block_size` so the model
+can use more context, a learning-rate warmup/decay schedule instead of a flat `1e-3`, some dropout
+once training runs long enough to actually overfit, and more attention heads/layers — the experiment
+above already shows that going the other way (fewer heads/layers) clearly hurts, so going up should
+help, within reason.
 
 ## Questions I still have
 
@@ -22,4 +42,3 @@ This week is the most directly cumulative one so far. The Lab 3 Transformer reus
 
 - Swap the character-level tokenizer for a small trained sub-word tokenizer and re-run the same training loop, to get a direct before/after comparison rather than just a conceptual one.
 - Increase `block_size` beyond 64 characters (roughly one sentence) to see whether longer context measurably improves story coherence, directly testing the "long-range relationships" idea from the pre-training notes.
-- Actually launch the Gradio chat interface built in Lab 3 (commented out during the batch run) and interact with the trained model directly, rather than only reading its generated samples.
