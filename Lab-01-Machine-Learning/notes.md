@@ -1,6 +1,5 @@
 # Week 1 Notes — NLP Foundations
 
-Source: [Week 1 lecture slides](resources/Week%201.pdf) — *Large Language Models and Generative AI*, Lesson 1: From NLP to Generative AI.
 
 ## Key terms
 
