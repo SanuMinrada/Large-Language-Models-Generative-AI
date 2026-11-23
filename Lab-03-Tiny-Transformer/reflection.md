@@ -2,43 +2,52 @@
 
 ## What I learned
 
-Reading the "looking inside an LLM" material in the [notes](notes.md) was one thing, but actually building and training [a tiny Transformer from scratch in Lab 3](notebooks/lab3_tiny_transformer.ipynb) made the whole forward-pass pipeline (tokenizer → Transformer blocks → LM head → sampling) feel real instead of diagrammatic. Watching the validation loss fall from 4.46 (untrained, roughly `ln(75)` for a 75-character vocabulary — i.e. the model starting out no better than guessing uniformly) down to 1.56 over 15 epochs, and perplexity land at 4.77, gave me an actual number to attach to the abstract idea of "the model is learning structure." The generated text after training is still mostly gibberish, but it's gibberish with English-shaped words and roughly sentence-like punctuation, which is a genuinely different thing from the random-character output the untrained model would have produced. Actually loading the saved checkpoint into a [Gradio chat interface](notebooks/lab3_gradio_chat.ipynb) and sending it a real message made it feel like a finished thing rather than just notebook output. The BERT vs. GPT vs. T5 comparison table also finally made sense end-to-end once I'd implemented the causal mask myself — "causal/unidirectional" isn't just a label, it's one `torch.triu(...)` call that determines whether a position can see future tokens or not.
+Building and training a tiny Transformer from scratch made the whole pipeline (tokenizer →
+Transformer blocks → output) feel real instead of just a diagram. The validation loss dropped
+from 4.46 to 1.56 over 15 epochs, and perplexity landed at 4.77, which gave me an actual number
+to attach to "the model is learning." The generated text is still mostly gibberish, but it's
+gibberish with word-shaped chunks and roughly sentence-like punctuation, which is clearly
+different from the random output the untrained model gave. Loading the saved model into a Gradio
+chat window and actually sending it a message made it feel like a finished thing rather than just
+notebook output. The BERT vs GPT vs T5 comparison also made a lot more sense once I'd implemented
+the causal mask myself — I could see exactly what "causal" means in code, not just as a label.
 
 ## What was challenging
 
-Interpreting the perplexity number in context was harder than I expected — knowing that 4.77 is "good" requires knowing what the ceiling is (75, for uniform random guessing over this vocabulary) and that this is character-level rather than word/sub-word level, so it isn't directly comparable to the perplexity numbers quoted for real LLMs. The "why does decoder-only dominate in 2024" discussion was also non-obvious at first — I initially assumed encoder-decoder (T5-style) would be strictly more powerful since it has both components, but the notes' point about KV-caching and avoiding cross-attention overhead reframed it as an engineering/scaling argument rather than a capability one.
+Understanding what a "good" perplexity score actually means took some thought — 4.77 is only good
+because the vocabulary is 75 characters, so I can't compare it directly to perplexity scores for
+real word-level LLMs. I also assumed at first that an encoder-decoder model (like T5) would be
+stronger than a decoder-only one since it has both parts, but it turns out decoder-only models
+dominate mainly because they're cheaper and faster to run at scale (KV caching, no extra
+cross-attention), not because they're inherently smarter.
 
 ## How it connects to earlier weeks
 
-This week is the most directly cumulative one so far. The Lab 3 Transformer reuses, line for line, the mechanisms from Week 2's notes: GELU in the feed-forward block, residual connections + LayerNorm (built into `nn.TransformerEncoderLayer`) preventing vanishing gradients, and multi-head self-attention — just with a causal mask added, which is the one concrete architectural difference between this week's GPT-style Causal Language Model and the more general attention mechanism Week 2 introduced. It also directly revisits Week 1's tokenization discussion: I used character-level tokenization in the lab (matching the lecturer's starter code) specifically because it's the simplest option from Week 1's "types of tokenization" slide, but the Week 1 notes already flagged that sub-word tokenization (BERT/GPT/T5) exists precisely to balance vocabulary size against sequence length — a trade-off I could feel directly in this lab, since a 75-character vocabulary means every single word takes many tokens to generate.
+This lab reuses the Week 2 mechanisms directly: GELU, residual connections, LayerNorm, and
+multi-head attention, just with a causal mask added on top to make it GPT-style instead of
+bidirectional. It also ties back to Week 1's tokenization discussion — I used character-level
+tokens here (the simplest option), and felt directly why sub-word tokenization exists: with only
+75 characters in the vocabulary, every word takes many tokens to generate.
 
 ## Mechanisms that improve performance
 
-The lab sheet asks what mechanisms are actually helping this model perform, so going through them
-directly: masked multi-head self-attention (made causal by the triangular mask in `forward()`) is
-what lets the model relate tokens to each other at all; the residual connections and LayerNorm
-built into `nn.TransformerEncoderLayer` are what keep gradients stable as the signal passes through
-multiple layers; GELU in the feed-forward block gives smoother gradients than ReLU would; and AdamW
-is doing the actual per-parameter learning-rate adaptation during training. All four are already in
-this tiny model, and the capacity experiment (1 layer/1 head vs. 2 layers/2 heads) is direct proof
-that taking some of this capacity away measurably hurts both the loss and the generated text.
+The things already helping this tiny model: masked multi-head self-attention (so tokens can
+relate to each other), residual connections + LayerNorm (keep gradients stable through the
+layers), GELU (smoother gradients than ReLU), and AdamW (adaptive learning rates). The capacity
+experiment proves this isn't just theory — removing a layer and a head made the loss and the
+generated text noticeably worse.
 
-Beyond what's already here, a few things would clearly help if this were scaled past a lab exercise:
-switching from character-level to sub-word tokenization (so the model isn't spending its limited
-capacity reconstructing whole words one character at a time), more training data and steps (900
-stories and 1,500 steps is barely enough to see the loss bend), a longer `block_size` so the model
-can use more context, a learning-rate warmup/decay schedule instead of a flat `1e-3`, some dropout
-once training runs long enough to actually overfit, and more attention heads/layers — the experiment
-above already shows that going the other way (fewer heads/layers) clearly hurts, so going up should
-help, within reason.
+If I scaled this up, a few things would help further: sub-word tokenization instead of
+character-level, more training data and steps, a longer context window, a learning-rate
+warmup/decay schedule instead of a flat rate, some dropout, and more heads/layers.
 
 ## Questions I still have
 
-- How much would switching Lab 3's tokenizer from character-level to a simple sub-word scheme (e.g. a small trained BPE tokenizer) improve generation quality for the same number of training steps — would it converge faster, or just produce different *kinds* of errors?
-- The "Experience with model settings" comparison showed the 1-layer/1-head model converging to a clearly worse validation loss (1.768 vs. 1.563) in the same number of steps — would it eventually catch up with more steps, or does limited capacity create a hard ceiling no amount of extra training can overcome?
-- How exactly does KV-caching interact with the autoregressive loop at inference time — my lab's `generate()` function recomputes the full forward pass over the whole context at every step rather than caching, so I understand *why* caching would help, but not the exact mechanics of what gets stored and reused.
+- Would a sub-word tokenizer actually speed up learning, or just produce different kinds of errors?
+- Would the smaller (1-layer, 1-head) model eventually catch up with more training steps, or is there a hard capacity ceiling?
+- How exactly does KV-caching work during generation? My `generate()` function recomputes everything each step, so I get *why* caching would help but not the exact mechanics.
 
 ## What I'd try next
 
-- Swap the character-level tokenizer for a small trained sub-word tokenizer and re-run the same training loop, to get a direct before/after comparison rather than just a conceptual one.
-- Increase `block_size` beyond 64 characters (roughly one sentence) to see whether longer context measurably improves story coherence, directly testing the "long-range relationships" idea from the pre-training notes.
+- Swap in a small trained sub-word tokenizer and compare results directly.
+- Increase `block_size` beyond 64 characters to see if more context improves story coherence.

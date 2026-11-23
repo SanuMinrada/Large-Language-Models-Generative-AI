@@ -1,14 +1,11 @@
-# Lab 02 — LLM in Everyday Life
+# Lab 02: AI in Everyday Challenges (Group Activity)
 
 ## Laboratory Session
-
-Lab 02 — AI in Everyday Challenges (group activity)
+Lab 02, AI in Everyday Challenges (group activity) (PUSL 3205)
 
 ## Objective
-
-Apply LLMs to an everyday challenge faced by students, using an LLM as a product-development
-partner to design a product concept addressing a real-world problem, per
-[Lab sheet 2](resources/Lab%20sheet%202.pdf).
+Use an LLM as a product-development partner to design a product concept for an everyday
+challenge faced by students, per [Lab sheet 2](resources/Lab%20sheet%202.pdf).
 
 ## Tasks and Implementation
 
