@@ -1,62 +1,38 @@
-# Week 4 Reflection — Prompt Engineering and Fine-Tuning
+# Week 4 Reflection — Fine-Tuning an LLM with LoRA
 
 ## What I learned
 
-The [notes](notes.md)' point that "fine-tuning is worth it when prompt engineering consistently
-fails or the task needs domain-specific knowledge" went from abstract to very concrete once I
-actually ran [Lab 4](notebooks/lab4_fine_tuning.ipynb): the untouched base model hedges on *every*
-ByteFix question ("As an AI, I don't have real-time access to current prices...") because it
-genuinely has no way to know a fictional shop's prices — no amount of clever prompting would fix
-that, only giving it the information would, which is exactly the "domain-specific knowledge"
-case from the slides. LoRA's mechanics also clicked properly for the first time:
-`model.print_trainable_parameters()` showing only ~1.2% of 362M parameters as trainable made the
-"freeze the base model, train a small low-rank update" idea tangible rather than diagrammatic.
+This lab made fine-tuning feel like a real, hands-on process instead of just a concept. I picked a
+small model (`SmolLM2-360M-Instruct`) and made up my own 32-question dataset for a fake computer
+repair shop, then fine-tuned it with LoRA on just my CPU. It only took about 5 minutes, which
+surprised me — I expected fine-tuning to need a GPU no matter what, but LoRA only trains a small
+set of extra parameters (about 1.2% of the model), so it's light enough for a small model like
+this one. The loss dropped steadily from 3.18 to 2.18, and I could actually see the model's answers
+change in tone afterwards — it started answering in character as "ByteFix" instead of giving
+generic AI-assistant disclaimers.
 
 ## What was challenging
 
-The genuinely hard part of this week wasn't the concepts, it was debugging my own Lab 4 code.
-My first pass produced byte-for-byte identical "original" and "fine-tuned" answers, which looked
-like the fine-tuning had done nothing — training loss had clearly dropped (3.18 → 2.17) so
-*something* was learning, but the comparison said otherwise. Tracking it down (comparing raw
-logits with and without the adapter via `disable_adapter()`) showed the adapter was in fact
-changing predictions; the actual bug was that `PeftModel.from_pretrained(base_model, ...)`
-mutates `base_model` in place, so my "original" and "fine-tuned" variables ended up pointing at
-the same LoRA-modified model. I only noticed because I went looking for *why* the numbers didn't
-match the loss curve, rather than accepting a plausible-looking result at face value — a good
-reminder that "the code ran without errors" and "the code is correct" are different things.
+I found a real bug while comparing the models: if you load the fine-tuned model by wrapping the
+*same* base model object with `PeftModel.from_pretrained`, it mutates that object in place. So if
+you then reuse that same object thinking it's still the "original" model, you're actually
+comparing the fine-tuned model against itself. I had to load two completely separate model
+instances to compare them fairly. It also took me a while to accept an honest result: the
+fine-tuned model doesn't reliably repeat the exact prices I trained it on — it sometimes makes up
+numbers instead of using the real LKR figures. With only 32 examples and 5 epochs, that's a fair
+result, not something to hide.
 
-## How it connects to earlier weeks
+## Testing seen vs. unseen questions
 
-This directly extends Week 3: fine-tuning *is* another round of the same training loop from the
-Lab 3 Transformer (forward pass → cross-entropy loss → backward pass → weight update) — just
-starting from a pretrained checkpoint instead of random weights, and updating a small LoRA
-subset instead of every parameter. The evaluation metrics section also closes a loop from both
-Week 1 and Week 3: perplexity was already used to judge the Lab 3 Transformer, and this week adds
-BLEU and BERTScore alongside it with an explicit caveat — none of them measure factual
-correctness — which is precisely what the Lab 4 results demonstrate directly: BLEU went from 0.88
-to 1.20 (a real improvement) while the fine-tuned model was *still* inventing USD price ranges
-instead of recalling the actual trained LKR figures on unseen questions. Higher BLEU tracked
-"sounds more like ByteFix," not "is factually correct about ByteFix."
-
-## Questions I still have
-
-- How many more training steps (or examples) would it typically take before a model like this
-  starts reliably recalling specific trained facts (like exact prices) rather than just adopting
-  the right tone and confidence level?
-- Since the lecturer's own reference notebook has the same `base_model`-mutation bug, would
-  fixing it there change their reported BLEU results (1.12 vs. 1.12) the same way it changed mine
-  (0.88 vs. 1.20)?
-- How would QLoRA's quantization change these results if I had GPU access — would the 4-bit
-  base model's answers before fine-tuning look noticeably worse than this full-precision CPU run?
+Testing with questions that were and weren't in the training data made the comparison much more
+convincing. For a seen question like the refurbished laptop warranty, the fine-tuned model gave a
+short, confident answer instead of the base model's long hedge. For an unseen question about a
+loyalty program, the fine-tuned model still answered in the ByteFix "voice" even though that exact
+fact was never in the training data, which showed it had picked up on the style, not just
+memorised answers.
 
 ## What I'd try next
 
-- Train for more epochs/steps on the same 32-example dataset to see at what point factual recall
-  (not just tone) starts showing up in the generated answers.
-- Try a slightly larger or more repetitive dataset (e.g. the same fact phrased three different
-  ways) to see whether that helps the model actually retain specific numbers rather than just
-  adopting the shop's confident voice.
-- Add a BERTScore comparison alongside BLEU, since the Week 4 notes describe it as measuring
-  semantic similarity rather than literal word overlap — potentially a fairer measure here, since
-  the fine-tuned answers are stylistically right but still state different specific numbers than
-  the reference.
+- Train for more epochs or with a larger dataset to see if exact fact recall improves.
+- Try a slightly bigger model like `Qwen2.5-0.5B-Instruct` and compare the results.
+- Run the same experiment on a GPU (Colab) to see how much faster it trains.

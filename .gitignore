@@ -42,6 +42,10 @@ token.json
 *.h5
 checkpoints/
 
+# Lab 4 LoRA fine-tuning output (adapter weights + tokenizer copy regenerable
+# by re-running the notebook; only *.safetensors was covered above otherwise)
+bytefix_lora/
+
 # OS files
 .DS_Store
 Thumbs.db
