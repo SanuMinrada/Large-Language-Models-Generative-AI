@@ -23,7 +23,7 @@ LLM_MODEL = "llama3.2:3b"
 
 
 def build_llm():
-    return ChatOllama(model=LLM_MODEL, temperature=0)
+    return ChatOllama(model=LLM_MODEL, temperature=0, num_ctx=8192)
 
 
 def run_turn(llm_with_tools, tools_by_name, history, user_input, verbose=True):
