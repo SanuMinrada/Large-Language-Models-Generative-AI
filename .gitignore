@@ -46,6 +46,11 @@ checkpoints/
 # by re-running the notebook; only *.safetensors was covered above otherwise)
 bytefix_lora/
 
+# Lab 5 RAG ingestion input: duplicate copies of lecture PDFs from other labs'
+# resources/ folders, copied here only so ingest.py has something to read.
+# Regenerable, never shipped as duplicate data.
+Lab-05-RAG-Pipeline/app/data/
+
 # OS files
 .DS_Store
 Thumbs.db
